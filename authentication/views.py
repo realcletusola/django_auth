@@ -84,8 +84,8 @@ class SignInRequest(APIView):
 
 					return Response({
 						"success":"Login successful",
-						"refresh_token": str(refresh),
-						"access_token":str(refresh.access_token),
+						"refresh": str(refresh),
+						"access":str(refresh.access_token),
 						"status": status.HTTP_200_OK
 					})
 
@@ -148,7 +148,7 @@ class SignOutRequest(APIView):
 				
 		"""
 		try:
-			refresh_token = request.data["refresh_token"] # get refresh token from sign out request
+			refresh_token = request.data["refresh"] # get refresh token from sign out request
 			if refresh_token:
 
 				token = RefreshToken(refresh_token) 
@@ -310,7 +310,7 @@ class UserRequest(APIView):
 
 		"""
 		try:
-			user = User.objects.all() # get all users 
+			user = User.objects.filter(is_staff=False) # get all users except users with staff privilege
 			serializer = self.serializer_class(user, many=True)
 			return Response({
 				"success": "User fetched successfully",
@@ -373,7 +373,7 @@ class UserDetailsRequest(APIView):
 		
 		"""
 		user = self.get_object(pk)
-		serializer = self.serializer_class(user, data=request.data)
+		serializer = self.serializer_class(user, data=request.data, context={'request': request})
 		if serializer.is_valid(raise_exception=True):
 			serializer.save()
 			return Response({
@@ -394,7 +394,7 @@ class UserDetailsRequest(APIView):
 
 		"""
 		user = self.get_object(pk)
-		serializer = self.serializer_class(user, data=request.data, partial=True)
+		serializer = self.serializer_class(user, data=request.data, context={'request': request}, partial=True)
 		if serializer.is_valid(raise_exception=True):
 			serializer.save()
 			return Response({
