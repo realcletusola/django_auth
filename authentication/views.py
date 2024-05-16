@@ -1,11 +1,12 @@
 from django.contrib.auth import authenticate, get_user_model 
 from django.db.models import Q
+from django.http import Http404
 from rest_framework.views import APIView 
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .serializers import SignUpSerializer, SignInSerializer
+from .serializers import SignUpSerializer, SignInSerializer, ProfileSerializer, UserSerializer
 from .models import UserProfile 
 
 User = get_user_model()
@@ -36,7 +37,7 @@ class SignUpRequest(APIView):
 			serializer.save()
 
 			return Response({
-				"message": "Account created successfully",
+				"success": "Account created successfully",
 				"status": status.HTTP_201_CREATED
 			})
 
@@ -82,7 +83,7 @@ class SignInRequest(APIView):
 					user_profile.reset_login_trials() # reset login trials on successful authentication
 
 					return Response({
-						"message":"Login successful",
+						"success":"Login successful",
 						"refresh_token": str(refresh),
 						"access_token":str(refresh.access_token),
 						"status": status.HTTP_200_OK
@@ -153,19 +154,270 @@ class SignOutRequest(APIView):
 				token = RefreshToken(refresh_token) 
 				token.blacklist() # blacklist token
 				return Response({
-					"message": "Logout successful",
+					"success": "Logout successful",
 					"status": status.HTTP_200_OK
 				})
 			
 			else:
 				return Response({
-					"error": "Refresh token not provided",
+					"error": "Unable to log you out. Refresh token not provided",
 					"status": status.HTTP_400_BAD_REQUEST
 				})
 
 		except Exception as e:
 			return Response({
-				"error": "Unable to log you out. Please try again",
+				"error": "An error occured. Please try again",
+				"status": status.HTTP_500_INTERNAL_SERVER_ERROR
+			})
+
+
+class ProfileRequest(APIView):
+	"""
+	view for user profile 
+	"""
+	permission_classes = [permissions.IsAuthenticated, ]
+	serializer_class = ProfileSerializer
+
+	def get(self, request, format=None):
+		"""
+		Handle get request for user profile 
+
+		"""
+		try:
+			profile = UserProfile.objects.get(user=request.user) # get profile of curently logged in user 
+			serializer = self.serializer_class(profile, many=True)
+			return Response({
+				"success": "Profile fetched successfully",
+				"data": serializer.data,
+				"status": status.HTTP_200_OK
+			})
+
+		except UserProfile.DoesNotExist:		
+			return Response({
+				"error": "Unable to fetch user profile",
+				"status": status.HTTP_404_NOT_FOUND
+			})
+			
+		except Exception as e:
+			return Response({
+				"error":"An error occured. Please try again later",
+				"status": status.HTTP_500_INTERNAL_SERVER_ERROR
+			})
+		
+
+class ProfileDetailsRequest(APIView):
+
+	"""
+	profile details view 
+	"""
+	permission_classes = [permissions.IsAuthenticated, ]
+	serializer_class = ProfileSerializer
+	
+	def get_object(self, pk):
+		"""
+		Method to get profile object
+
+		"""
+		try:
+			return UserProfile.objects.get(pk=pk, user=self.request.user)
+		
+		except UserProfile.DoesNotExist:
+			raise Http404("User profile does not exist.")
+		
+		except Exception as e:
+			raise Http404("An error occurred while retrieving the user profile")
+		
+
+	def get(self, request, pk, format=None):
+		"""
+		Method to get user profile details 
+		
+		"""
+		profile = self.get_object(pk)
+		serializer = self.serializer_class(profile)
+		return Response({
+			"success":"success",
+			"data":serializer.data,
+			"status":status.HTTP_200_OK
+		})
+	
+	def put(self, request, pk, format=None):
+		"""
+		Put method for user profile update
+		
+		"""
+		profile = self.get_object(pk)
+		serializer = self.serializer_class(profile, data=request.data)
+		if serializer.is_valid(raise_exception=True):
+			serializer.save(user=request.user)
+			return Response({
+				"success": "Profile updated successfully",
+				"status": status.HTTP_201_CREATED
+			})
+
+		else:
+			return Response({
+				"error":"Unable to update profile",
+				"details": serializer.errors,
+				"status":status.HTTP_400_BAD_REQUEST
+			})
+		
+	def patch(self, request, pk, format=None):
+		"""
+		Patch method for user profile update
+
+		"""
+		profile = self.get_object(pk)
+		serializer = self.serializer_class(profile, data=request.data, partial=True)
+		if serializer.is_valid(raise_exception=True):
+			serializer.save(user=request.user)
+			return Response({
+				"success":"Profile updated successfully",
+				"status": status.HTTP_201_CREATED
+			})
+		
+		else:
+			return Response({
+				"error":"Unable to update profile",
+				"details": serializer.errors,
 				"status": status.HTTP_400_BAD_REQUEST
 			})
+		
+	def delete(self, request, pk, format=None):
+		"""
+		Delete method for user profile 
+
+		"""
+		profile = self.get_object(pk)
+		profile.delete()
+		return Response({
+			"success":"Profile deleted",
+			"status": status.HTTP_204_NO_CONTENT
+		})
+
+
+
+class UserRequest(APIView):
+	"""
+	view for user profile 
+	"""
+	permission_classes = [permissions.IsAuthenticated, ]
+	serializer_class = UserSerializer
+
+	def get(self, request, format=None):
+		"""
+		Handle get request for user object 
+
+		"""
+		try:
+			user = User.objects.get(id=request.user.id) # get curently logged in user 
+			serializer = self.serializer_class(user, many=True)
+			return Response({
+				"success": "User fetched successfully",
+				"data": serializer.data,
+				"status": status.HTTP_200_OK
+			})
+
+		except User.DoesNotExist:		
+			return Response({
+				"error": "Unable to fetch user",
+				"status": status.HTTP_404_NOT_FOUND
+			})
+			
+		except Exception as e:
+			return Response({
+				"error":"An error occured. Please try again later",
+				"status": status.HTTP_500_INTERNAL_SERVER_ERROR
+			})
+		
+
+class UserDetailsRequest(APIView):
+
+	"""
+	profile details view 
+	"""
+	permission_classes = [permissions.IsAuthenticated, ]
+	serializer_class = UserSerializer
+	
+	def get_object(self, pk):
+		"""
+		Method to get user object
+
+		"""
+		try:
+			return User.objects.get(pk=pk, id=self.request.user.id)
+		
+		except User.DoesNotExist:
+			raise Http404("User profile does not exist.")
+		
+		except Exception as e:
+			raise Http404("An error occurred while retrieving the user profile")
+		
+
+	def get(self, request, pk, format=None):
+		"""
+		Method to get user details 
+		
+		"""
+		user = self.get_object(pk)
+		serializer = self.serializer_class(user)
+		return Response({
+			"success":"success",
+			"data":serializer.data,
+			"status":status.HTTP_200_OK
+		})
+	
+	def put(self, request, pk, format=None):
+		"""
+		Put method for user update
+		
+		"""
+		user = self.get_object(pk)
+		serializer = self.serializer_class(user, data=request.data)
+		if serializer.is_valid(raise_exception=True):
+			serializer.save()
+			return Response({
+				"success": "User details updated successfully",
+				"status": status.HTTP_201_CREATED
+			})
+
+		else:
+			return Response({
+				"error":"Unable to update user details",
+				"details": serializer.errors,
+				"status":status.HTTP_400_BAD_REQUEST
+			})
+		
+	def patch(self, request, pk, format=None):
+		"""
+		Patch method for user update
+
+		"""
+		user = self.get_object(pk)
+		serializer = self.serializer_class(user, data=request.data, partial=True)
+		if serializer.is_valid(raise_exception=True):
+			serializer.save()
+			return Response({
+				"success":"User details updated successfully",
+				"status": status.HTTP_201_CREATED
+			})
+		
+		else:
+			return Response({
+				"error":"Unable to update user details",
+				"details": serializer.errors,
+				"status": status.HTTP_400_BAD_REQUEST
+			})
+		
+	def delete(self, request, pk, format=None):
+		"""
+		Delete method for user  
+
+		"""
+		user = self.get_object(pk)
+		user.delete()
+		return Response({
+			"success":"User deleted",
+			"status": status.HTTP_204_NO_CONTENT
+		})
 
