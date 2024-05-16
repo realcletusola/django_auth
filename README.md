@@ -149,4 +149,3 @@
         <li>"Account disabled."(This error will occur if the user account is inactive)</li>
     }
   
-<h3>NOTE: Include the refresh_token in the SignOut request Header.</h3>
