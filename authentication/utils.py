@@ -1,4 +1,4 @@
-from rest_framework.jwt.utils import jwt_payload_handler  
+from rest_framework_simplejwt.utils import jwt_payload_handler  
 
 # function to add username to jwt payload 
 def custom_jwt_payload_handler(user):
