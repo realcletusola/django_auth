@@ -27,8 +27,30 @@
 
 <h3 style="color: red;">Request Format:</h3>
 
+<h4> SignUp Resquest: </h4>
 <p style="color: red;">- Method:</p><span style="color: green;">POST</span>
-<p style="color: red;">- URL: </p><span style="color: green;">/api/auth/login</span>
+<p style="color: red;">- URL: </p><span style="color: green;">/api/auth/signup/</span>
+<p style="color: red;">- Headers:</p>
+<li style="color: red;">- Content-Type: </li><span style="color: green;">application/json</span>
+<li style="color: red;">- Body:</li>
+  {
+      <span style="color:red">"username": </span> <span style="color: green;">"example_user",</span>
+      <span style="color:red">"email": </span> <span style="color: green;">"example@email.com",</span>
+      <span style="color:red">"password": </span> <span style="color: green;">"example_password",</span>
+      <span style="color:red">"password_again": </span> <span style="color: green;">"example_password",</span>
+  }
+<h3 style="color: red;">Response Format:</h3>
+<p style="color: red;">- Status Code: </p> <span style="color: green;">201 CREATED</span>
+<p style="color: red;">- Body:</p>
+  {
+    <span style="color:red">"success": </span> <span style="color: green;">"Account created successfully",</span>
+  }
+
+
+
+<h4> SignIn  Request: </h4>
+<p style="color: red;">- Method:</p><span style="color: green;">POST</span>
+<p style="color: red;">- URL: </p><span style="color: green;">/api/auth/signin/</span>
 <p style="color: red;">- Headers:</p>
 <li style="color: red;">- Content-Type: </li><span style="color: green;">application/json</span>
 <li style="color: red;">- Body:</li>
@@ -48,9 +70,64 @@
 <p style="color: red;">- Status Code: </p> <span style="color: green;">200 OK</span>
 <p style="color: red;">- Body:</p>
   {
-    <span style="color:red">"access_token": </span> <span style="color: green;">"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",</span>
-    <span style="color:red">"refresh_token": </span> <span style="color: green;">"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."</span>
+    <span style="color:red">"success": </span> <span style="color: green;">"Login successful",</span>
+    <span style="color:red">"access": </span> <span style="color: green;">"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",</span>
+    <span style="color:red">"refresh": </span> <span style="color: green;">"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."</span>
   }
+
+
+
+
+<h4> SignOut  Request: </h4>
+<p style="color: red;">- Method:</p><span style="color: green;">POST</span>
+<p style="color: red;">- URL: </p><span style="color: green;">/api/auth/signout/</span>
+<p style="color: red;">- Headers:</p>
+<li style="color: red;">- Content-Type: </li><span style="color: green;">application/json</span>
+<li style="color: red;">- Body:</li>
+  {
+      <span style="color:red">"refresh": </span> <span style="color: green;">"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",</span>
+  }
+
+<h3 style="color: red;">Response Format:</h3>
+<p style="color: red;">- Status Code: </p> <span style="color: green;">200 OK</span>
+<p style="color: red;">- Body:</p>
+  {
+    <span style="color:red">"success": </span> <span style="color: green;">"Logout successful",</span>
+  }
+
+
+
+<h4> Token Refresh Request: </h4>
+<p style="color: red;">- Method:</p><span style="color: green;">POST</span>
+<p style="color: red;">- URL: </p><span style="color: green;">/api/auth/token/refresh/</span>
+<p style="color: red;">- Headers:</p>
+<li style="color: red;">- Content-Type: </li><span style="color: green;">application/json</span>
+<li style="color: red;">- Body:</li>
+  {
+      <span style="color:red">"refresh": </span> <span style="color: green;">"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",</span>
+
+  }
+
+<h3 style="color: red;">Response Format:</h3>
+<p style="color: red;">- Status Code: </p> <span style="color: green;">200 OK</span>
+<p style="color: red;">- Body:</p>
+  {
+    <span style="color:red">"access": </span> <span style="color: green;">"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",</span>
+    <span style="color:red">"refresh": </span> <span style="color: green;">"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."</span>
+  }
+
+
+
+<h4 style="color: red;">NOTE: <span style="color:green">The access token must be included in the Authorization header as a "Bearer" type when making requests to the User or User Profile end points.</span></h4>
+<h4 style="color: red;">NOTE: <span style="color:green">Only the PATCH request method allow partial update. If you are using PUT method, you should be updating all fields.</span></h4>
+
+<h4> User or Profile Request: </h4>
+<p style="color: red;">- Method:</p><span style="color: green;">GET/POST/PUT/PATCH/DELETE</span>
+<p style="color: red;">- URL: </p><span style="color: green;">/api/auth/token/refresh/</span>
+<p style="color: red;">- Headers:</p>
+<li style="color: red;">- Content-Type: </li><span style="color: green;">application/json</span>
+<li style="color: red;">- Authorization: </li><span style="color: green;"> Bearer access_token</span>
+
 
 
 <h3 style="color: red;">Error Handling:</h3>
