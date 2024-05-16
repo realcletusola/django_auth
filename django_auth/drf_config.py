@@ -24,14 +24,14 @@ REST_FRAMEWORK = {
 
 # django authentication backends 
 AUTHENTICATION_BACKENDS = [
-    "user_auth.custom_auth.CustomAuthenticationBackend", # custom auth backend(login with either username or email
+    "authentication.custom_auth.CustomAuthenticationBackend", # custom auth backend(login with either username or email
     'django.contrib.auth.backends.ModelBackend', 
 ]
 
 # rest framework simple jwt configuration 
 JWT_AUTH = {
     # handler to include username in jwt payload 
-    "JWT_PAYLOAD_HANDLER": "user_auth.utils.custom_jwt_payload_handler"
+    "JWT_PAYLOAD_HANDLER": "authentication.utils.custom_jwt_payload_handler"
 }
 
 SIMPLE_JWT = {
