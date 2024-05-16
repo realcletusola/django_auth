@@ -1,5 +1,6 @@
 from django.db import models 
 from django.contrib.auth.models import AbstractUser, UserManager, Group, Permission
+from PIL import Image 
 
 
 class CustomUserManager(UserManager): # custom user manager  
@@ -50,7 +51,7 @@ class CustomUser(AbstractUser):
 
 
 class UserProfile(models.Model): # user profile model 
-	profile_picture = models.ImageField(blank=True, null=True)
+	profile_picture = models.ImageField(upload_to="profile_picture", default="default.jpg", blank=True, null=True)
 	display_name = models.CharField(max_length=35, blank=True, null=True)
 	user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="user_profile")
 	login_trials = models.IntegerField(default=0)
@@ -65,6 +66,20 @@ class UserProfile(models.Model): # user profile model
 	def reset_login_trials(self): # function to reset login trials
 		self.login_trials = 0
 		self.save()
+
+	def save(self, *args, **kwargs):
+		super().save(*args, **kwargs)
+
+		# open profile image
+		img = Image.open(self.profile_picture.path)
+
+		# set default image size 
+		default_size = (200, 200)
+		img.thumbnail(default_size)
+
+		# save the resized image 
+		img.save(self.profile_picture.path)
+
 
 	class Meta:
 		ordering = ['-time']
