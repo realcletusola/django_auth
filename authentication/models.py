@@ -51,7 +51,7 @@ class CustomUser(AbstractUser):
 
 
 class UserProfile(models.Model): # user profile model 
-	profile_picture = models.ImageField(upload_to="profile_picture", default="default.jpg", blank=True, null=True)
+	profile_picture = models.ImageField(upload_to="profile_picture", default='default.jpeg', blank=True, null=True)
 	display_name = models.CharField(max_length=35, blank=True, null=True)
 	user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="user_profile")
 	login_trials = models.IntegerField(default=0)
