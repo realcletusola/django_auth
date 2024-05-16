@@ -39,7 +39,7 @@
       "password": "example_password",
       "password_again": "example_password",
   }
-<h3>Response Format:</h3>
+<h5> SignUp Response Format:</h5>
 <p>- Status Code:  201 CREATED</p>
 <p>- Body:</p>
   {
@@ -66,7 +66,7 @@
     "password": "example_password",
   }
 
-<h3>Response Format:</h3>
+<h5> SignIn Response Format:</h5>
 <p>- Status Code:  200 OK</p>
 <p>- Body:</p>
   {
@@ -88,7 +88,7 @@
       "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
   }
 
-<h3>Response Format:</h3>
+<h5>SignOut Response Format:</h5>
 <p>- Status Code: 200 OK</p>
 <p>- Body:</p>
   {
@@ -108,7 +108,7 @@
 
   }
 
-<h3>Response Format:</h3>
+<h5>Token Refresh Response Format:</h5>
 <p>- Status Code:  200 OK</p>
 <p>- Body:</p>
   {
@@ -143,7 +143,7 @@
 
 
     }
-  - Status Code: 401Unauthorized
+  - Status Code: 401 Unauthorized
     {
         "error":<br>
         <li>"Account disabled."(This error will occur if the user account is inactive)</li>
