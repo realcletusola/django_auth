@@ -125,7 +125,7 @@ class SignUpSerializer(serializers.ModelSerializer):
 		email = validated_data["email"]
 		password = validated_data["password"]
 
-		user = User.objects.create(username=username, email=email)
+		user = User.objects.create_user(username=username, email=email, password=password)
 		user.set_password(password)
 		user.save()
 
@@ -149,7 +149,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		models = UserProfile
-		fields = ('profile_picture', 'display_name', 'user')
+		fields = ('id', 'profile_picture', 'display_name', 'user')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -165,7 +165,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = User 
-		fields = ('username', 'email')
+		fields = ('id', 'username', 'email')
 
 	
 	def validate_username(self, value): 
@@ -182,7 +182,7 @@ class UserSerializer(serializers.ModelSerializer):
 		if len(value) < 4 or len(value) > 20:
 			errors["username_length"] = "Username length can only be between 4 to 20 characters"
 
-		user = self.context['request'].user # get current user 
+		user = self.context["request"].user
 		current_username = user.username # get the current username of the user 
 		check_username = User.objects.filter(username__iexact=value) # filter database to check if th username already exists
 
@@ -216,7 +216,7 @@ class UserSerializer(serializers.ModelSerializer):
 		if len(value) < 6 or len(value) > 40:
 			errors["email_length"] = "Email must be between 6 to 40 characters"
 
-		user = self.context['request'].user # get current user object 
+		user = self.context["request"].user # get current user object 
 		current_email = user.email # get the current email of the user 
 		check_email = User.objects.filter(email__iexact=value) # filter database if email already exists
 
