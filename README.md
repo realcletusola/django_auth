@@ -31,8 +31,8 @@
 <p>- Method:POST</p>
 <p>- URL: /api/auth/signup/</p>
 <p>- Headers:</p>
-<li>- Content-Type: </li>application/json
-<li>- Body:</li>
+<p>- Content-Type: application/json</p>
+<p>- Body:</p>
   {
       "username": "example_user",
       "email": "example@email.com",
@@ -52,8 +52,8 @@
 <p>- Method:POST</p>
 <p>- URL: /api/auth/signin/</p>
 <p>- Headers:</p>
-<li>- Content-Type: </li>application/json
-<li>- Body:</li>
+<p>- Content-Type: application/json</p>
+<p>- Body:</p>
   {
       "login_id": "example_user",
       "password": "example_password",
@@ -80,10 +80,10 @@
 
 <h4> SignOut  Request: </h4>
 <p>- Method:POST</p>
-<p>- URL: /api/auth/signout/
+<p>- URL: /api/auth/signout/</p>
 <p>- Headers:</p>
-<li>- Content-Type: </li>application/json
-<li>- Body:</li>
+<p>- Content-Type: application/json</p>
+<p>- Body:</p>
   {
       "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
   }
@@ -101,8 +101,8 @@
 <p>- Method:POST</p>
 <p>- URL: /api/auth/token/refresh/</p>
 <p>- Headers:</p>
-<li>- Content-Type: </li>application/json
-<li>- Body:</li>
+<p>- Content-Type: application/json</p>
+<p>- Body:</p>
   {
       "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
 
@@ -122,11 +122,11 @@
 <h4>NOTE: Only the PATCH request method allow partial update. If you are using PUT method, you should be updating all fields.</h4>
 
 <h4> User or Profile Request: </h4>
-<p>- Method:GET/POST/PUT/PATCH/DELETE
-<p>- URL: /api/auth/token/refresh/
-<p>- Headers:
-<li>- Content-Type: </li>application/json
-<li>- Authorization: </li> Bearer access_token
+<p>- Method:GET/POST/PUT/PATCH/DELETE</p>
+<p>- URL: /api/auth/token/refresh/</p>
+<p>- Headers:</p>
+<p>- Content-Type: application/json</p>
+<p>- Authorization: Bearer access_token</p>
 
 
 
