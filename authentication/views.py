@@ -310,7 +310,7 @@ class UserRequest(APIView):
 
 		"""
 		try:
-			user = User.objects.get(id=request.user.id) # get curently logged in user 
+			user = User.objects.all() # get all users 
 			serializer = self.serializer_class(user, many=True)
 			return Response({
 				"success": "User fetched successfully",
@@ -345,7 +345,7 @@ class UserDetailsRequest(APIView):
 
 		"""
 		try:
-			return User.objects.get(pk=pk, id=self.request.user.id)
+			return User.objects.get(pk=pk, id=self.request.user.id) # get currently logged in user 
 		
 		except User.DoesNotExist:
 			raise Http404("User profile does not exist.")
