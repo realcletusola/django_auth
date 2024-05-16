@@ -2,6 +2,8 @@ import re
 from rest_framework import serializers 
 from django.contrib.auth import get_user_model 
 
+from .models import UserProfile
+
 User = get_user_model()
 
 
@@ -135,3 +137,93 @@ class SignInSerializer(serializers.Serializer): # login serializer
 	login_id = serializers.CharField(max_length=40, required=True) # login id can be username or email
 	password = serializers.CharField(required=True)
 
+
+class ProfileSerializer(serializers.ModelSerializer):
+	"""
+	user profile serializer
+	
+	Method: Get - get user profile
+			Post - update user profile (profile picture and display name only) 
+	"""
+	user = serializers.CharField(required=False) # return user as a char and not an object
+
+	class Meta:
+		models = UserProfile
+		fields = ('profile_picture', 'display_name', 'user')
+
+
+class UserSerializer(serializers.ModelSerializer):
+	"""
+	user serializer 
+
+	Method: Get - get user object 
+			Post - update user object (username and email)
+
+	"""
+	username = serializers.CharField(required=True)
+	email = serializers.EmailField(required=True)
+
+	class Meta:
+		model = User 
+		fields = ('username', 'email')
+
+	
+	def validate_username(self, value): 
+		"""
+		Validate username 
+
+		"""
+
+		errors = {}
+
+		if value is None or not value.strip(): # make certain username is not none or filled with white space
+			errors["username_value"] = "Username can't be empty or filled with whitespaces only"
+
+		if len(value) < 4 or len(value) > 20:
+			errors["username_length"] = "Username length can only be between 4 to 20 characters"
+
+		user = self.context['request'].user # get current user 
+		current_username = user.username # get the current username of the user 
+		check_username = User.objects.filter(username__iexact=value) # filter database to check if th username already exists
+
+		if check_username.exists() and value != current_username: # check if the new username is not the current username and also if the new username already exists
+			errors["username_unavailable"] = f"Username {value} is not available"
+
+		pattern = r'[!@#$%^&*()+\-={}\[\]:;"\'<>,.?/\\|`~]' # pattern containing unallowed chracters 
+
+		if re.search(pattern, value): # check if the username contains any of this character
+			errors["username_character"] = "Username should not contain any special character except underscore '_'"
+
+		value = value.replace(" ", "_") # replace whitespace between username with underscore 
+
+		if errors:
+			raise serializers.ValidationError(errors)
+
+		return value 
+
+
+	def validate_email(self, value):
+		"""
+		Validate email 
+
+		"""
+
+		errors = {}
+
+		if value is None or not value.strip(): # make certain email is not none or filled with whitespace
+			errors["email_value"] = "Email can't be empty or filled with whitespaces only"
+
+		if len(value) < 6 or len(value) > 40:
+			errors["email_length"] = "Email must be between 6 to 40 characters"
+
+		user = self.context['request'].user # get current user object 
+		current_email = user.email # get the current email of the user 
+		check_email = User.objects.filter(email__iexact=value) # filter database if email already exists
+
+		if check_email.exists() and value != current_email: # check if email already exists and if email isn't the current email
+			errors["email_unavailable"] = f"Email {value} is not available"
+
+		if errors:
+			raise serializers.ValidationError(errors)
+
+		return value 
