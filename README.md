@@ -11,7 +11,7 @@
 <h3>User Profile Endpoints:</h3>
 <li>- GET /api/auth/profile/: Retrieve the profile of the authenticated user.</li>
 <li>- PUT /api/auth/profile_details/<id>/:  Update the profile of the authenticated user.</li> 
-<li> PATCH /api/auth/profile_details/<id>/:  Update the profile of the authenticated user.</li>
+<li>- PATCH /api/auth/profile_details/<id>/:  Update the profile of the authenticated user.</li>
 <li>- DELETE /api/auth/profile_details/<id>/:  Delete the profile of the authenticated user.</li>
 
 <p>Example of the put, patch and delete url path: "/api/auth/profile_details/7/"- (if the profile id is 7)</p>
@@ -28,52 +28,25 @@
 <h3>Request Format:</h3>
 
 <h4> SignUp Resquest: </h4>
-<p>- Method:POST</p>
+<p>- Method: POST</p>
 <p>- URL: /api/auth/signup/</p>
-<p>- Headers:</p>
-<p>- Content-Type: application/json</p>
-<p>- Body:</p>
-  {
-      "username": "example_user",
-      "email": "example@email.com",
-      "password": "example_password",
-      "password_again": "example_password",
-  }
-<h5> SignUp Response Format:</h5>
+<p>- Headers: "content-type: application/json" </p>
+<p>- Body: {"username": "example_user", "email": "example@email.com", "password": "example_password", "password_again": "example_password"}</p>
+<h5> SignUp Response Format: </h5>
 <p>- Status Code:  201 CREATED</p>
-<p>- Body:</p>
-  {
-    "success": "Account created successfully",
-  }
+<p>- Body: {"success": "Account created successfully"} </p>
 
 
 
 <h4> SignIn  Request: </h4>
-<p>- Method:POST</p>
+<p>- Method: POST</p>
 <p>- URL: /api/auth/signin/</p>
-<p>- Headers:</p>
-<p>- Content-Type: application/json</p>
-<p>- Body:</p>
-  {
-      "login_id": "example_user",
-      "password": "example_password",
-  }
-
-  OR
-
-  {
-    "login_id": "example_email",
-    "password": "example_password",
-  }
+<p>- Headers: "content-type: application/json" </p>
+<p>- Body: { "login_id": "example_user", "password": "example_password"}  OR  {"login_id": "example_email", "password": "example_password"} </p>
 
 <h5> SignIn Response Format:</h5>
 <p>- Status Code:  200 OK</p>
-<p>- Body:</p>
-  {
-    "success": "Login successful",
-    "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
-    "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
-  }
+<p>- Body: {"success": "Login successful", "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...", "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."}</p>
 
 
 
@@ -81,40 +54,24 @@
 <h4> SignOut  Request: </h4>
 <p>- Method:POST</p>
 <p>- URL: /api/auth/signout/</p>
-<p>- Headers:</p>
-<p>- Content-Type: application/json</p>
-<p>- Body:</p>
-  {
-      "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
-  }
+<p>- Headers: "content-type: application/json" </p>
+<p>- Body: {"refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."} </p>
 
 <h5>SignOut Response Format:</h5>
 <p>- Status Code: 200 OK</p>
-<p>- Body:</p>
-  {
-    "success": "Logout successful",
-  }
+<p>- Body: {"success": "Logout successful"}</p>
 
 
 
 <h4> Token Refresh Request: </h4>
 <p>- Method:POST</p>
 <p>- URL: /api/auth/token/refresh/</p>
-<p>- Headers:</p>
-<p>- Content-Type: application/json</p>
-<p>- Body:</p>
-  {
-      "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
-
-  }
+<p>- Headers:"content-type: application/json"</p>
+<p>- Body: {"refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."} </p>
 
 <h5>Token Refresh Response Format:</h5>
 <p>- Status Code:  200 OK</p>
-<p>- Body:</p>
-  {
-    "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
-    "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
-  }
+<p>- Body: {"access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...", "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."} </p>
 
 
 
@@ -122,10 +79,9 @@
 <h4>NOTE: Only the PATCH request method allow partial update. If you are using PUT method, you should be updating all fields.</h4>
 
 <h4> User or Profile Request: </h4>
-<p>- Method:GET/POST/PUT/PATCH/DELETE</p>
+<p>- Method: GET/POST/PUT/PATCH/DELETE</p>
 <p>- URL: /api/auth/token/refresh/</p>
-<p>- Headers:</p>
-<p>- Content-Type: application/json</p>
+<p>- Headers: "content-type: application/json"</p>
 <p>- Authorization: Bearer access_token</p>
 
 
