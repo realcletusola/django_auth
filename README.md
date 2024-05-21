@@ -129,7 +129,6 @@
   
         "errors": 
             - "Failed to create account."(Invalid data format, this will return the field errors)
-            - "Invalid username or password."
             - "Unable to log you out. Refresh token not provided"
             - "Unable to update profile."(Invalid data format, this will return the field errors)
             - "Unable to update user details."(Invalid data format, this will return the field errors) 
@@ -137,5 +136,6 @@
   - Status Code: 401 Unauthorized <br>
     
         "error":
-        - "Account disabled."(This error will occur if the user account is inactive)
+         - "Invalid username or password."
+         - "Account disabled."(This error will occur if the user account is inactive)
     
