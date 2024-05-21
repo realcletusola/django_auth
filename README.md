@@ -89,19 +89,16 @@
 <h3>Error Handling:</h3>
 
   - Status Code: 400 Bad Request<br>
-    {
-        "errors":<br> 
-            <li>"Failed to create account."(Invalid data format, this will return the field errors)</li>
-            <li>"Invalid username or password."</li>
-            <li>"Unable to log you out. Refresh token not provided"</li>
-            <li>"Unable to update profile."(Invalid data format, this will return the field errors)</li>
-            <li>"Unable to update user details."(Invalid data format, this will return the field errors)</li>
+    
+        "errors": <br> 
+            - "Failed to create account."(Invalid data format, this will return the field errors)
+            - "Invalid username or password."
+            - "Unable to log you out. Refresh token not provided"
+            - "Unable to update profile."(Invalid data format, this will return the field errors)
+            - "Unable to update user details."(Invalid data format, this will return the field errors) 
 
-
-    }
   - Status Code: 401 Unauthorized <br>
-    {
+    
         "error":<br>
-        <li>"Account disabled."(This error will occur if the user account is inactive)</li>
-    }
-  
+        - "Account disabled."(This error will occur if the user account is inactive)
+    
