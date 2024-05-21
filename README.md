@@ -132,7 +132,7 @@
 
 <h3>Error Handling:</h3>
 
-  - Status Code: 400Bad Request
+  - Status Code: 400 Bad Request<br>
     {
         "errors":<br> 
             <li>"Failed to create account."(Invalid data format, this will return the field errors)</li>
@@ -143,7 +143,7 @@
 
 
     }
-  - Status Code: 401 Unauthorized
+  - Status Code: 401 Unauthorized <br>
     {
         "error":<br>
         <li>"Account disabled."(This error will occur if the user account is inactive)</li>
