@@ -62,7 +62,7 @@ SIMPLE_JWT = {
     'JTI_CLAIM': 'jti',
 
     "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
-    "SLIDING_TOKEN_LIFETIME": timedelta(days=int(os.getenv('SLIDING_TOKEN_LIFETIME'))),
+    "SLIDING_TOKEN_LIFETIME": timedelta(minutes=int(os.getenv('SLIDING_TOKEN_LIFETIME'))),
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=int(os.getenv('SLIDING_TOKEN_REFRESH_LIFETIME'))),
 
 }
