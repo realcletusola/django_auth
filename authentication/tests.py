@@ -42,13 +42,15 @@ class AuthenticationTests(APITestCase):
 			"password":"testUSER23##"
 		}
 
+
 	def test_signup(self):
 		"""
 		test user signup
 
 		"""
 		response = self.client.post(self.signup_url, self.user_signup_data, format='json')
-		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		response_status = response.data["status"] # get status from response data(this approach is optional)
+		self.assertEqual(response_status, status.HTTP_201_CREATED)
 		self.assertEqual(User.objects.count(), 1) # confirm user count in database is the newly created user
 		self.assertEqual(User.objects.get().username, 'testuser') # confirm the username of the counted user is our testuser
 		self.assertEqual(UserProfile.objects.count(), 1) # since there's a signal that creates User Profile on signup, we can check to confirm if the profile is created
@@ -75,4 +77,15 @@ class AuthenticationTests(APITestCase):
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
 		self.assertIn('access', response.data) # confirm access token is included in response data
 
-		
+
+	def test_signout(self):
+		"""
+		test user signout
+
+		"""
+		self.client.post(self.signup_url, self.user_signup_data, format='json') # firstly, register the user
+		user_signin = self.client.post(self.signin_url, self.user_signin_data_1, format='json') # secondly, signin the user
+		refresh_token = user_signin.data['refresh'] # get refresh token from user signin response data
+		response = self.client.post(self.signout_url, data={"refresh":refresh_token}, format='json') # signout post request
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+
