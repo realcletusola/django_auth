@@ -178,33 +178,42 @@ class ProfileRequest(APIView):
 	permission_classes = [permissions.IsAuthenticated, ]
 	serializer_class = ProfileSerializer
 
+	def get_queryset(self):
+		"""
+		Get profile queryset based on user permission
+
+		"""
+		user = self.request.user
+		try: 
+			if user.is_staff or user.is_admin: # staff or admin users can view all profiles
+				return UserProfile.objects.all()			
+			else:
+				return UserProfile.objects.get(user=user) # basic users can get their profile objects only
+
+		except UserProfile.DoesNotExist:
+			return Http404("User profile does not exist")
+
+		except Exception as e:
+			return Response({
+				"error": "Error retrieving profile data",
+				"status": status.HTTP_500_INTERNAL_SERVER_ERROR
+			})
+
 	def get(self, request, format=None):
 		"""
 		Handle get request for user profile 
 
 		"""
-		try:
-			profile = UserProfile.objects.get(user=request.user) # get profile of curently logged in user 
-			serializer = self.serializer_class(profile, many=True)
-			return Response({
-				"success": "Profile fetched successfully",
-				"data": serializer.data,
-				"status": status.HTTP_200_OK
-			})
+		profile = self.get_queryset() # get profile based on queryset permission 
+		serializer = self.serializer_class(profile, many=True)
+		return Response({
+			"success": "Profile fetched successfully",
+			"data": serializer.data,
+			"status": status.HTTP_200_OK
+		})
 
-		except UserProfile.DoesNotExist:		
-			return Response({
-				"error": "Unable to fetch user profile",
-				"status": status.HTTP_404_NOT_FOUND
-			})
-			
-		except Exception as e:
-			return Response({
-				"error":"An error occured. Please try again later",
-				"status": status.HTTP_500_INTERNAL_SERVER_ERROR
-			})
+
 		
-
 class ProfileDetailsRequest(APIView):
 
 	"""
@@ -219,13 +228,16 @@ class ProfileDetailsRequest(APIView):
 
 		"""
 		try:
-			return UserProfile.objects.get(pk=pk, user=self.request.user)
-		
+			return UserProfile.objects.get(pk=pk) # get user profile by pk
+		 
 		except UserProfile.DoesNotExist:
 			raise Http404("User profile does not exist.")
 		
 		except Exception as e:
-			raise Http404("An error occurred while retrieving the user profile")
+			return Response({
+				"error": "Error retrieving profile data",
+				"status": status.HTTP_500_INTERNAL_SERVER_ERROR
+			})
 		
 
 	def get(self, request, pk, format=None):
@@ -296,45 +308,56 @@ class ProfileDetailsRequest(APIView):
 		})
 
 
-
 class UserRequest(APIView):
 	"""
-	view for user profile 
+	view for user object. This view is used to get all users,
+	it should be used by staff or admin users only. 
 	"""
 	permission_classes = [permissions.IsAuthenticated, ]
 	serializer_class = UserSerializer
 
+	def get_queryset(self):
+		""" 
+		get user object based on user permission
+		
+		"""
+		user = self.request.user 
+		try:
+			if user.is_staff or user.is_admin:
+				return User.objects.all() # staff or admin can view all users
+
+			else:
+				return User.objects.get(id=self.request.user.id) # basic users can view their user object only
+
+		except User.DoesNotExist:
+			raise Http404("User does not exist")
+
+		except Exception as e:
+			return Response({
+				"error": "Error retrieving user data",
+				"status": status.HTTP_500_INTERNAL_SERVER_ERROR
+			})
+
+			
 	def get(self, request, format=None):
 		"""
 		Handle get request for user object 
 
 		"""
-		try:
-			user = User.objects.filter(is_staff=False) # get all users except users with staff privilege
-			serializer = self.serializer_class(user, many=True)
-			return Response({
-				"success": "User fetched successfully",
-				"data": serializer.data,
-				"status": status.HTTP_200_OK
-			})
-
-		except User.DoesNotExist:		
-			return Response({
-				"error": "Unable to fetch user",
-				"status": status.HTTP_404_NOT_FOUND
-			})
-			
-		except Exception as e:
-			return Response({
-				"error":"An error occured. Please try again later",
-				"status": status.HTTP_500_INTERNAL_SERVER_ERROR
-			})
+		user = User.objects.all() # get all users 
+		serializer = self.serializer_class(user, many=True)
+		return Response({
+			"success": "User fetched successfully",
+			"data": serializer.data,
+			"status": status.HTTP_200_OK
+		})
 		
 
 class UserDetailsRequest(APIView):
 
 	"""
-	profile details view 
+	user details view. This should be used by staff or admin users only
+
 	"""
 	permission_classes = [permissions.IsAuthenticated, ]
 	serializer_class = UserSerializer
@@ -345,13 +368,16 @@ class UserDetailsRequest(APIView):
 
 		"""
 		try:
-			return User.objects.get(pk=pk, id=self.request.user.id) # get currently logged in user 
+			return User.objects.get(pk=pk) # get currently logged in user 
 		
 		except User.DoesNotExist:
 			raise Http404("User profile does not exist.")
 		
 		except Exception as e:
-			raise Http404("An error occurred while retrieving the user profile")
+			return Response({
+				"error": "Error retrieving user data",
+				"status": status.HTTP_500_INTERNAL_SERVER_ERROR
+			})
 		
 
 	def get(self, request, pk, format=None):
@@ -420,4 +446,5 @@ class UserDetailsRequest(APIView):
 			"success":"User deleted",
 			"status": status.HTTP_204_NO_CONTENT
 		})
+
 
