@@ -65,7 +65,8 @@ class AuthenticationTests(APITestCase):
 		response = self.client.post(self.signin_url, self.user_signin_data_1, format='json') # login the user
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
 		self.assertIn('access', response.data) # confirm access token is included in response data
-	
+		
+		return response # return response which will be used in the UserUpdateTest below
 
 	def test_signin_2(self):
 		"""
@@ -89,3 +90,16 @@ class AuthenticationTests(APITestCase):
 		response = self.client.post(self.signout_url, data={"refresh":refresh_token}, format='json') # signout post request
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+
+# class UserViewTest(AuthenticationTests):
+# 	"""
+# 	Test get, put, and patch for user data
+# 	This class inherits the AuthenticationTests class, this allows us to make use of methods in the AuthenticationTests class
+
+# 	"""
+# 	def setUp(self):
+# 		"""
+# 		setup test 
+
+# 		"""
+# 		authenticate = self.test_signin_1() # call the signin method in the AuthenticationTests class
