@@ -344,7 +344,7 @@ class UserRequest(APIView):
 		Handle get request for user object 
 
 		"""
-		user = User.objects.all() # get all users 
+		user = self.get_queryset() # get all users 
 		serializer = self.serializer_class(user, many=True)
 		return Response({
 			"success": "User fetched successfully",
