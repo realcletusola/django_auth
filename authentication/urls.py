@@ -17,7 +17,7 @@ urlpatterns = [
 	path('signout/', SignOutRequest.as_view(), name='signout'), # user sign out url
     path('profile/', ProfileRequest.as_view(), name='profiles'), # user profile url path
     path('profile_details/<int:pk>/', ProfileDetailsRequest.as_view(), name='profile_details'),  # profile details url path
-    path('users/', UserRequest.as_view(), name='user'), # user info url path
+    path('users/', UserRequest.as_view(), name='users'), # user info url path
     path('user_details/<int:pk>/', UserDetailsRequest.as_view(), name='user_details'), # user details url path
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
