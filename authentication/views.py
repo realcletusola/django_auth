@@ -185,7 +185,7 @@ class ProfileRequest(APIView):
 		"""
 		user = self.request.user
 		try: 
-			if user.is_staff or user.is_admin: # staff or admin users can view all profiles
+			if user.is_staff or user.is_superuser: # staff or admin users can view all profiles
 				return UserProfile.objects.all()			
 			else:
 				return UserProfile.objects.get(user=user) # basic users can get their profile objects only
@@ -261,7 +261,7 @@ class ProfileDetailsRequest(APIView):
 		profile = self.get_object(pk)
 		serializer = self.serializer_class(profile, data=request.data)
 		if serializer.is_valid(raise_exception=True):
-			serializer.save(user=request.user)
+			serializer.save(user=self.request.user)
 			return Response({
 				"success": "Profile updated successfully",
 				"status": status.HTTP_201_CREATED
@@ -282,7 +282,7 @@ class ProfileDetailsRequest(APIView):
 		profile = self.get_object(pk)
 		serializer = self.serializer_class(profile, data=request.data, partial=True)
 		if serializer.is_valid(raise_exception=True):
-			serializer.save(user=request.user)
+			serializer.save(user=self.request.user)
 			return Response({
 				"success":"Profile updated successfully",
 				"status": status.HTTP_201_CREATED
@@ -323,7 +323,7 @@ class UserRequest(APIView):
 		"""
 		user = self.request.user 
 		try:
-			if user.is_staff or user.is_admin:
+			if user.is_staff or user.is_superuser:
 				return User.objects.all() # staff or admin can view all users
 
 			else:
@@ -440,11 +440,20 @@ class UserDetailsRequest(APIView):
 		Delete method for user  
 
 		"""
-		user = self.get_object(pk)
-		user.delete()
-		return Response({
-			"success":"User deleted",
-			"status": status.HTTP_204_NO_CONTENT
-		})
+		request_user = self.request.user 
+
+		if request_user.is_staff or request_user.is_superuser: # only staff or admin user can delete user
+			user = self.get_object(pk)
+
+			user.delete()
+			return Response({
+				"success":"User deleted",
+				"status": status.HTTP_204_NO_CONTENT
+			})
+		else:
+			return Response({
+				"error":"You are not authorized to delete user",
+				"status": status.HTTP_401_UNAUTHORIZED
+			})
 
 

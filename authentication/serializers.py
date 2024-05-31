@@ -148,7 +148,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 	user = serializers.CharField(required=False) # return user as a char and not an object
 
 	class Meta:
-		models = UserProfile
+		model = UserProfile
 		fields = ('id', 'profile_picture', 'display_name', 'user')
 
 
