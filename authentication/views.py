@@ -261,7 +261,7 @@ class ProfileDetailsRequest(APIView):
 		profile = self.get_object(pk)
 		serializer = self.serializer_class(profile, data=request.data)
 		if serializer.is_valid(raise_exception=True):
-			serializer.save(user=request.user)
+			serializer.save(user=self.request.user)
 			return Response({
 				"success": "Profile updated successfully",
 				"status": status.HTTP_201_CREATED
@@ -282,7 +282,7 @@ class ProfileDetailsRequest(APIView):
 		profile = self.get_object(pk)
 		serializer = self.serializer_class(profile, data=request.data, partial=True)
 		if serializer.is_valid(raise_exception=True):
-			serializer.save(user=request.user)
+			serializer.save(user=self.request.user)
 			return Response({
 				"success":"Profile updated successfully",
 				"status": status.HTTP_201_CREATED
