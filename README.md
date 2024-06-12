@@ -6,7 +6,7 @@
      POST /api/auth/signup/: Register a new user.
      POST /api/auth/signin/: Obtain a JWT token by providing valid credentials.
      POST /api/auth/token/refresh/: Refresh the JWT token.
-     POST /api/auth/signout/: Logout and invalidate the JWT token.
+     POST /api/auth/signout/: Logout and invalidate the JWT token. 
 
 
 <h3>User Profile Endpoints:</h3>
@@ -24,8 +24,8 @@
      GET /api/auth/users/: Retrieve a list of all users.
      GET /api/user_details/<id>/: Retrieve details of a specific user.
      PUT /api/user_details/<id>/: Update details of a specific user.
-     PATCH /api/user_details/<id>/: Update details of a specific user.
-     DELETE /api/users/<id>/:Delete a specific user.
+     PATCH /api/user_details/<id>/: Update details of a specific user. 
+     DELETE /api/users/<id>/:Delete a specific user. 
 
 
 <h4> SignUp Resquest: </h4>
