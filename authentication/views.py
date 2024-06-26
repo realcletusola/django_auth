@@ -1,3 +1,5 @@
+from django.utils import timezone
+from datetime import timedelta
 from django.contrib.auth import authenticate, get_user_model 
 from django.db.models import Q
 from django.http import Http404
@@ -100,6 +102,10 @@ class SignInRequest(APIView):
 				try:
 					user = User.objects.get(Q(username__iexact=loginId) | Q(email__iexact=loginId)) # search database for user with the provided 
 					user_profile = user.user_profile # get user profile
+			    		if user_profile.last_failed_login:
+						time_since_last_failed_login = timezone.now() - user_profile.last_failed_login
+						if time_since_last_failed_login > timedelta(hours=24):
+							user_profile.reset_login_trails()
 
 					if user_profile.login_trials < 5: # if user hasn't exceeded login trials 
 						user_profile.increment_login_trials() # add 1 to the current login trial counter
