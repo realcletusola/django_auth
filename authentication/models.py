@@ -1,5 +1,6 @@
 from django.db import models 
 from django.contrib.auth.models import AbstractUser, UserManager, Group, Permission
+from django.utils import timezone
 from PIL import Image 
 
 
@@ -61,10 +62,12 @@ class UserProfile(models.Model): # user profile model
 
 	def increment_login_trials(self): # function to increase login trials 
 		self.login_trials += 1
+		self.last_failed_login = timezone.now()
 		self.save()
 
 	def reset_login_trials(self): # function to reset login trials
 		self.login_trials = 0
+		self.last_failed_login = None
 		self.save()
 
 	def save(self, *args, **kwargs):
