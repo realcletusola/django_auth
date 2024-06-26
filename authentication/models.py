@@ -57,6 +57,7 @@ class UserProfile(models.Model): # user profile model
 	user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="user_profile")
 	login_trials = models.IntegerField(default=0)
 	max_login_trials = models.IntegerField(default=5)
+	last_failed_login = models.DateTimeField(null=True, blank=True)
 	time = models.DateTimeField(auto_now_add=True)
 
 
