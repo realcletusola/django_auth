@@ -125,7 +125,7 @@ class SignUpSerializer(serializers.ModelSerializer):
 		email = validated_data["email"]
 		password = validated_data["password"]
 
-		user = User.objects.create_user(username=username, email=email, password=password)
+		user = User.objects.create(username=username, email=email)
 		user.set_password(password)
 		user.save()
 
